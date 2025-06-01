@@ -31,7 +31,10 @@ export function ParticlesBackground() {
       speedY: number;
       color: string;
 
-      constructor() {
+      private canvas: HTMLCanvasElement;
+
+      constructor(canvas: HTMLCanvasElement) {
+        this.canvas = canvas;
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 5 + 0.5;
@@ -46,10 +49,11 @@ export function ParticlesBackground() {
 
         if (this.size > 0.2) this.size -= 0.01;
 
-        if (this.x < 0 || this.x > canvas.width) {
+        // Use stored canvas reference
+        if (this.x < 0 || this.x > this.canvas.width) {
           this.speedX = -this.speedX;
         }
-        if (this.y < 0 || this.y > canvas.height) {
+        if (this.y < 0 || this.y > this.canvas.height) {
           this.speedY = -this.speedY;
         }
       }
@@ -72,7 +76,7 @@ export function ParticlesBackground() {
     const init = () => {
       particles = [];
       for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
+        particles.push(new Particle(canvas));
       }
     };
 
@@ -110,7 +114,7 @@ export function ParticlesBackground() {
       connectParticles();
       
       if (particles.length < particleCount) {
-        particles.push(new Particle());
+        particles.push(new Particle(canvas));
       }
       
       animationFrameId = requestAnimationFrame(animate);
